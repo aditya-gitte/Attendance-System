@@ -15,7 +15,7 @@ import glob
 
 
 
-def singleImagePipeline(input_image_path,input_directory_path,coordinates_file_path,face_detection_model_path,face_reidentification_model_path,landmark_regression_model_path,face_database_path,face_gallary_crop_flag,debug_flag):
+def singleImagePipeline(input_image_path,input_directory_path,coordinates_file_path,face_detection_model_path,face_reidentification_model_path,landmark_regression_model_path,face_database_path,debug_flag):
     
     
     #run face detection
@@ -139,7 +139,7 @@ def main():
     for filename in os.listdir(group_images_directory):
         file_path = os.path.join(group_images_directory, filename)
         #call the attendance function for one image
-        singleImagePipeline(file_path,input_directory_path,coordinates_file_path,face_detection_model_path,face_reidentification_model_path,landmark_regression_model_path,face_database_path,face_gallary_crop_flag,debug_flag)
+        singleImagePipeline(file_path,input_directory_path,coordinates_file_path,face_detection_model_path,face_reidentification_model_path,landmark_regression_model_path,face_database_path,debug_flag)
 
 
 
