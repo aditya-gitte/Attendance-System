@@ -3,7 +3,9 @@ from dotenv import load_dotenv
 import subprocess
 from ImageExtractor import ROISaver
 import os
+import shutil
 import glob
+import logging
 
 
 
@@ -15,7 +17,7 @@ import glob
 
 
 
-def singleImagePipeline(input_image_path,input_directory_path,coordinates_file_path,face_detection_model_path,face_reidentification_model_path,landmark_regression_model_path,face_database_path,debug_flag):
+def singleImagePipeline(input_image_path,input_directory_path,coordinates_file_path,face_detection_model_path,face_reidentification_model_path,landmark_regression_model_path,face_database_path,debug_flag,base_counter,dump):
     
     
     #run face detection
@@ -32,7 +34,7 @@ def singleImagePipeline(input_image_path,input_directory_path,coordinates_file_p
 
     #run ROI extraction: saves indivisual images in the input directory. Each image in this directory acts a input to the face recognizer
     print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++Reading coordinates file++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-    obj=ROISaver(input_directory_path,input_image_path,coordinates_file_path)
+    obj=ROISaver(input_directory_path,input_image_path,coordinates_file_path, base_counter)
     obj.run()
     print("-----------------------------------------------------------Stored insivisual images in the input directory-----------------------------------------------------")
 
@@ -51,10 +53,10 @@ def singleImagePipeline(input_image_path,input_directory_path,coordinates_file_p
         output, error = p.communicate() 
         print(output)
         print(f"error= {error}")
-        print(f"#################################################### face recognition module for img{counter} ends here ################################################")
+        print(f"#################################################### face recognition module for {base_counter}img{counter} ends here ################################################")
 
 
-    #clear the coordinates file for next use
+    #clear the coordinates f    ile for next use
     print("--------------------------------------------------------Clearing the coordinates files --------------------------------------------------")
     with open(coordinates_file_path, 'w') as coordinates_file:
         coordinates_file.truncate()
@@ -66,7 +68,8 @@ def singleImagePipeline(input_image_path,input_directory_path,coordinates_file_p
         dir_path = input_directory_path
 
         for filename in os.listdir(dir_path):
-            if filename==".placeholder":  #so that the file names .placeholder is not deleted
+            #so that the file names .placeholder is not deleted
+            if filename==".placeholder":  
                 continue
             file_path = os.path.join(dir_path, filename)
             try:
@@ -78,6 +81,20 @@ def singleImagePipeline(input_image_path,input_directory_path,coordinates_file_p
                 print('Failed to delete %s. Reason: %s' % (file_path, e))
         print("-----------------------------cleared the inputs directory---------------------------------")
 
+    elif debug_flag=="1":
+        source_dir = input_directory_path
+        dest_dir = dump
+        file_list = os.listdir(source_dir)
+        for file_name in file_list:
+            #so that the file names .placeholder is not deleted
+            if file_name==".placeholder":  
+                continue
+            # Create the full path for the file
+            source_path = os.path.join(source_dir, file_name)
+            dest_path = os.path.join(dest_dir, file_name)
+            
+            # Cut the file from the source directory and paste it in the destination directory
+            shutil.move(source_path, dest_path)
 
 
 
@@ -98,7 +115,7 @@ def main():
     face_reidentification_model_path=os.environ['face_reidentification_model_path']
     landmark_regression_model_path=os.environ['landmark_regression_model_path']
     face_database_path=os.environ['face_database_path']
-    # face_gallary_crop_flag=os.environ['face_gallary_crop_flag']
+    dump=os.environ['dump']
     debug_flag=os.environ['debug_flag']
     group_images_directory=os.environ['group_images_directory']
 
@@ -135,11 +152,12 @@ def main():
                 coordinates_file.truncate()
     print("------------------------------------------------------------Cropping module ends here------------------------------------------------------------")
 
-
+    base_counter=0
     for filename in os.listdir(group_images_directory):
         file_path = os.path.join(group_images_directory, filename)
+        base_counter+=1
         #call the attendance function for one image
-        singleImagePipeline(file_path,input_directory_path,coordinates_file_path,face_detection_model_path,face_reidentification_model_path,landmark_regression_model_path,face_database_path,debug_flag)
+        singleImagePipeline(file_path,input_directory_path,coordinates_file_path,face_detection_model_path,face_reidentification_model_path,landmark_regression_model_path,face_database_path,debug_flag,base_counter,dump)
 
 
 

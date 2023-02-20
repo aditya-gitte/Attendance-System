@@ -6,10 +6,11 @@ import subprocess
 
 class ROISaver:
 
-    def __init__(self, ImageDirectory, imgpath, coordinatespath):
+    def __init__(self, ImageDirectory, imgpath, coordinatespath, base_counter):
         self.dic=ImageDirectory
         self.imgpath=imgpath
         self.coordinatespath=coordinatespath
+        self.base_counter=base_counter
 
     def run(self):
         # Load the image
@@ -38,10 +39,10 @@ class ROISaver:
             x2 = box[2] 
             y2 = box[3] 
             roi = image[y1:y2, x1:x2]
-            np=os.path.join(self.dic,f'box_{counter}.jpg')
+            np=os.path.join(self.dic,f'{self.base_counter}_box_{counter}.jpg')
             cv2.imwrite(np, roi)
         
-        print(f"[ INFO !! ] Added {counter} images to the input folders directory")
+        print(f"[ INFO !! ] Added {counter} images to the input folders directory for the base {self.base_counter}")
 
     
     def databaseCrop(self):
