@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 import subprocess
+import cv2
 from ImageExtractor import ROISaver
 import os
 import shutil
@@ -39,6 +40,18 @@ def singleImagePipeline(input_image_path,input_directory_path,coordinates_file_p
     print("-----------------------------------------------------------Stored insivisual images in the input directory-----------------------------------------------------")
 
 
+    # #convert images from RGB to BGR
+    # for filename in os.listdir(input_directory_path):
+    #     # Load the image
+    #     img_path = os.path.join(input_directory_path, filename)
+    #     img = cv2.imread(img_path)
+    #     # Convert the image from RGB to BGR
+    #     bgr_img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+    #     # Save the BGR image to disk
+    #     bgr_path = os.path.join(input_directory_path, img_path)
+    #     cv2.imwrite(bgr_path, bgr_img)
+
+
     #run face recognizer for every image in the input directory
     print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ face recognition module $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
     files = os.listdir(input_directory_path)
@@ -56,7 +69,7 @@ def singleImagePipeline(input_image_path,input_directory_path,coordinates_file_p
         print(f"#################################################### face recognition module for {base_counter}img{counter} ends here ################################################")
 
 
-    #clear the coordinates f    ile for next use
+    #clear the coordinates file for next use
     print("--------------------------------------------------------Clearing the coordinates files --------------------------------------------------")
     with open(coordinates_file_path, 'w') as coordinates_file:
         coordinates_file.truncate()
@@ -137,7 +150,7 @@ def main():
 
             
             #this module stores the cropped images in the face gallery
-            obj=ROISaver(face_database_path,file_path,coordinates_file_path)
+            obj=ROISaver(face_database_path,file_path,coordinates_file_path,base_counter=0)
             obj.databaseCrop()
 
             #renaming the cropped images to remove the 'c_' prefix

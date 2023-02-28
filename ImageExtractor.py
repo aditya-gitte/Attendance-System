@@ -41,6 +41,11 @@ class ROISaver:
             roi = image[y1:y2, x1:x2]
             np=os.path.join(self.dic,f'{self.base_counter}_box_{counter}.jpg')
             cv2.imwrite(np, roi)
+            #Converting RGB to BGR
+            img = cv2.imread(np)
+            bgr_img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+            cv2.imwrite(np, bgr_img)
+            
         
         print(f"[ INFO !! ] Added {counter} images to the input folders directory for the base {self.base_counter}")
 
