@@ -51,7 +51,10 @@ python3 runner.py
     - Path of the directory that stores the all the images of known identites that the face recognition model should recognize
     - **Face Database** directory has been used for this purpose in this repository
 - **debug_flag** : 
-    - In the workflow all the intermediate images are deleted to prepare the module for next iteration, if this flag is set 1 the intermediate images are not deleted
+    - In the workflow all the intermediate images are deleted to prepare the module for next iteration, if this flag is set 1 the intermediate images are not deleted and are transferred to the DUMP folder
+    - This can be used to verify the identifications with the actual images by using the logs.
+- **dump** :
+    - Path of the DUMP directory, this directory will be used to store all the intermediate images if the debug flag is set to 1
 
 ## Setting up Face Database
 - This repository should contain all the images of the known entities that the face recognition module should identify 
@@ -68,3 +71,13 @@ python3 runner.py
 - The images have to tightly croped for the face recognition module produce accurate results
 - Manually cropping each image would be a tedious job, therefore we have built an automatic cropping utility that crops all the images with the prefix ```c_``` 
 - You can name the images in the face Database without the ```c_``` prefix if you don't want the automatic cropping utility to crop the image, but it is recommended to use the cropping tool as it tightly crops the images which is cruicial for maximum accuracy
+
+- ### Using the image capture script to register new faces
+    - Since manually taken pictures are taken at different times using different cameras and with different postures, the datapoints can change drastically based on the afformentioned factors. 
+    - To solve this problem we have implemented a face capture script that takes 50 images of the user that has to be registered using the webcam.
+    - The resolution and colorspace of the images are optimized to produce the best results.
+    - To run this script execute the face_snap.py file using
+    ```
+    python3 face_snap.py
+    ```
+    - This script will ask for the name of the user, enter the name without any spaces, use '_' is needed instead of whitespaces.
