@@ -80,4 +80,4 @@ python3 runner.py
     ```
     python3 face_snap.py
     ```
-    - This script will ask for the name of the user, enter the name without any spaces, use '_' is needed instead of whitespaces.
+    - This script will ask for the name of the user, enter the name without any spaces, use '_' if needed instead of whitespaces.
