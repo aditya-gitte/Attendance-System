@@ -71,7 +71,7 @@ class FacesDatabase:
                         name = self.ask_to_save(crop)
                         self.dump_faces(crop, descriptor, name)
                 else:
-                    log.debug("Adding label {} to the gallery".format(label))
+                    # log.debug("Adding label {} to the gallery".format(label))
                     self.add_item(descriptor, label)
 
     def ask_to_save(self, image):
@@ -206,7 +206,7 @@ class FacesDatabase:
         match = -1
         if not label:
             label = self.create_new_label(self.fg_path, len(self.database))
-            log.warning("Trying to store an item without a label. Assigned label {}.".format(label))
+            # log.warning("Trying to store an item without a label. Assigned label {}.".format(label))
         else:
             match, label = self.check_if_label_exists(label)
 
@@ -214,7 +214,7 @@ class FacesDatabase:
             self.database.append(FacesDatabase.Identity(label, [desc]))
         else:
             self.database[match].descriptors.append(desc)
-            log.debug("Appending new descriptor for label {}.".format(label))
+            # log.debug("Appending new descriptor for label {}.".format(label))
 
         return match, label
 
